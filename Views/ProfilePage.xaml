@@ -1,0 +1,79 @@
+<Page
+    x:Class="ToDoListApp.Views.ProfilePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <Page.Resources>
+        <local:StringToImageSourceConverter x:Key="ImageConverter" xmlns:local="using:ToDoListApp.Converters" />
+    </Page.Resources>
+
+    <Grid>
+        <!-- Title Top Right -->
+        <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20,20,20,0" CornerRadius="12" Padding="20,10">
+            <Border.Background>
+                <AcrylicBrush TintColor="{ThemeResource SystemAltHighColor}" TintOpacity="0.85" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
+            </Border.Background>
+            <TextBlock x:Name="TitleText" Text="Profile" FontSize="28" FontWeight="Bold"/>
+        </Border>
+
+        <!-- Main Content -->
+        <StackPanel Spacing="30" Margin="40,110,40,40" HorizontalAlignment="Center" Width="380">
+            
+            <!-- Profile Header Card -->
+            <Border CornerRadius="16" Padding="40">
+                <Border.Background>
+                    <AcrylicBrush TintColor="{ThemeResource SystemAltHighColor}" TintOpacity="0.85" FallbackColor="{ThemeResource SystemChromeMediumColor}"/>
+                </Border.Background>
+                <StackPanel Spacing="15" HorizontalAlignment="Center">
+                    <Grid Width="120" Height="120" HorizontalAlignment="Center">
+                        <!-- Fallback initials (if no image is set) -->
+                        <PersonPicture DisplayName="{x:Bind MainViewModel.UserName, Mode=OneWay}" Width="120" Height="120"/>
+                        
+                        <!-- Always-reliable Image overlay -->
+                        <Ellipse Width="120" Height="120">
+                            <Ellipse.Fill>
+                                <ImageBrush x:Name="AvatarBrush" Stretch="UniformToFill" />
+                            </Ellipse.Fill>
+                        </Ellipse>
+
+                        <Button x:Name="ChangeAvatarBtn" Click="ChangeAvatar_Click" Width="36" Height="36" CornerRadius="18" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="{ThemeResource SystemControlBackgroundAltHighBrush}" BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}" BorderThickness="1" Padding="0" Visibility="Collapsed">
+                            <FontIcon Glyph="&#xE714;" FontSize="16"/>
+                        </Button>
+                    </Grid>
+                    <TextBlock x:Name="NameText" Text="{x:Bind MainViewModel.UserName, Mode=OneWay}" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center" />
+                    <TextBox x:Name="NameEdit" Text="{x:Bind MainViewModel.UserName, Mode=TwoWay}" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Width="250" Visibility="Collapsed"/>
+                    <TextBlock Text="{x:Bind MainViewModel.UserEmail, Mode=OneWay}" FontSize="16" Foreground="LightGray" HorizontalAlignment="Center"/>
+                    <Button x:Name="EditProfileBtn" Content="Edit Profile" Click="EditProfile_Click" HorizontalAlignment="Center" Margin="0,10,0,0" Style="{ThemeResource AccentButtonStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Stats Card -->
+            <Border CornerRadius="16" Padding="30">
+                <Border.Background>
+                    <AcrylicBrush TintColor="{ThemeResource SystemAltHighColor}" TintOpacity="0.85" FallbackColor="{ThemeResource SystemChromeMediumColor}"/>
+                </Border.Background>
+                <Grid ColumnDefinitions="*,*">
+                    <!-- Tasks Stat -->
+                    <StackPanel Grid.Column="0" Spacing="10" HorizontalAlignment="Center">
+                        <FontIcon Glyph="&#xE8D5;" FontSize="32" Foreground="#4285F4"/>
+                        <TextBlock Text="{x:Bind MainViewModel.Settings.TotalTasksCompleted, Mode=OneWay}" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="TxtTasksCompleted" Text="Tasks Completed" FontSize="14" Foreground="LightGray" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <!-- Pomodoros Stat -->
+                    <StackPanel Grid.Column="1" Spacing="10" HorizontalAlignment="Center">
+                        <FontIcon Glyph="&#xE916;" FontSize="32" Foreground="#FF6666"/>
+                        <TextBlock Text="{x:Bind MainViewModel.Settings.TotalPomodorosCompleted, Mode=OneWay}" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="TxtPomodoros" Text="Pomodoros" FontSize="14" Foreground="LightGray" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Page>
+
+

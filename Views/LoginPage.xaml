@@ -1,0 +1,85 @@
+<Page
+    x:Class="ToDoListApp.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:ToDoListApp.Converters"
+    mc:Ignorable="d">
+    
+    <Page.Resources>
+        <local:StringToImageSourceConverter x:Key="ImageConverter" />
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <local:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter" />
+    </Page.Resources>
+
+    <Grid>
+        <!-- Background Wallpaper -->
+        <Image Source="{x:Bind MainViewModel.Settings.WallpaperPath, Mode=OneWay, Converter={StaticResource ImageConverter}}" Stretch="UniformToFill" />
+        <Grid Background="#66000000" /> <!-- Dark overlay -->
+
+        <Border HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" CornerRadius="16" Padding="40">
+            <Border.Background>
+                <AcrylicBrush TintColor="Black" TintOpacity="0.8" FallbackColor="#DD000000" />
+            </Border.Background>
+            
+            <StackPanel Spacing="16">
+                <!-- App Logo & Branding -->
+                <StackPanel HorizontalAlignment="Center" Margin="0,0,0,5">
+                    <Border Width="68" Height="68" CornerRadius="16" HorizontalAlignment="Center">
+                        <Image Source="ms-appx:///Assets/Square150x150Logo.scale-200.png" Stretch="UniformToFill"/>
+                    </Border>
+                    <TextBlock Text="AIZ" FontSize="26" FontWeight="ExtraBold" Foreground="White" HorizontalAlignment="Center" Margin="0,8,0,0" CharacterSpacing="80"/>
+                </StackPanel>
+
+                <!-- Login View -->
+                <StackPanel Spacing="20" Visibility="{x:Bind ViewModel.IsRegistering, Mode=OneWay, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
+                    <TextBlock x:Name="TxtWelcomeBack" Text="Welcome Back" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                    <TextBox Header="Email" PlaceholderText="Enter your email" Text="{x:Bind ViewModel.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <PasswordBox Header="Password" PlaceholderText="Enter your password" Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="BtnLogIn" Content="Log In" Command="{x:Bind ViewModel.LoginCommand}" HorizontalAlignment="Stretch" Style="{ThemeResource AccentButtonStyle}" Height="40" Margin="0,10,0,0"/>
+                </StackPanel>
+
+                <!-- Registration View -->
+                <StackPanel Spacing="20" Visibility="{x:Bind ViewModel.IsRegistering, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <TextBlock x:Name="TxtCreateAccount" Text="Create Account" FontSize="32" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <TextBox Header="Name" PlaceholderText="Enter your name" Text="{x:Bind ViewModel.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Header="Email" PlaceholderText="Enter your email" Text="{x:Bind ViewModel.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <PasswordBox Header="Password" PlaceholderText="Enter your password" Password="{x:Bind ViewModel.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="BtnRegister" Content="Register" Command="{x:Bind ViewModel.RegisterCommand}" HorizontalAlignment="Stretch" Style="{ThemeResource AccentButtonStyle}" Height="40" Margin="0,10,0,0"/>
+                </StackPanel>
+
+                <TextBlock Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}" Foreground="#FF6666" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+
+                <TextBlock x:Name="TxtOr" Text="OR" Foreground="LightGray" HorizontalAlignment="Center" Margin="0,10"/>
+
+                <!-- Google Sign In Button -->
+                <Button Command="{x:Bind ViewModel.GoogleSignInCommand}" HorizontalAlignment="Stretch" Background="White" Foreground="Black" BorderThickness="0" CornerRadius="8" Height="40">
+                    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                        <TextBlock Text="G" FontWeight="Bold" FontSize="18" Foreground="#4285F4" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtGoogleSignIn" Text="Continue with Google" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Guest Login Button -->
+                <Button Command="{x:Bind ViewModel.GuestLoginCommand}" HorizontalAlignment="Stretch" Background="Transparent" Foreground="LightGray" BorderThickness="1" BorderBrush="Gray" CornerRadius="8" Height="40">
+                    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                        <FontIcon Glyph="&#xE77B;" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtGuestLogin" Text="Continue as Guest" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Toggle link -->
+                <Grid Margin="0,20,0,0">
+                    <HyperlinkButton x:Name="LinkSignUp" Content="Don't have an account? Sign up" Command="{x:Bind ViewModel.ToggleModeCommand}" HorizontalAlignment="Center" Visibility="{x:Bind ViewModel.IsRegistering, Mode=OneWay, Converter={StaticResource InvertedBoolToVisibilityConverter}}"/>
+                    <HyperlinkButton x:Name="LinkSignIn" Content="Already have an account? Log in" Command="{x:Bind ViewModel.ToggleModeCommand}" HorizontalAlignment="Center" Visibility="{x:Bind ViewModel.IsRegistering, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Loading Overlay -->
+        <Grid Background="#99000000" Visibility="{x:Bind ViewModel.IsBusy, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" IsHitTestVisible="True">
+            <ProgressRing IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}" Width="60" Height="60" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Page>
